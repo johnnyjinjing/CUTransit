@@ -5,4 +5,5 @@ package com.example.cutransit.data;
  */
 
 public class DataUtils {
+
 }
