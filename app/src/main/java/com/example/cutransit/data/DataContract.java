@@ -25,6 +25,12 @@ public class DataContract {
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_CODE = "code";
         public static final String COLUMN_DISTANCE = "distance";
+
+        public static Uri buildUri(long id) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(Long.toString(id))
+                    .build();
+        }
     }
 
     /* Favorite table */

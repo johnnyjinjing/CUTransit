@@ -6,6 +6,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
@@ -83,20 +84,57 @@ public class DataProvider extends ContentProvider {
         long rowId;
 
         switch (sUriMatcher.match(uri)) {
-            case CODE_FAVORITES: {
+            case CODE_STOPS:
+                rowId = db.insert(DataContract.StopEntry.TABLE_NAME, null, values);
+                if (rowId > 0)
+                    retUri = DataContract.StopEntry.buildUri(rowId);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            case CODE_FAVORITES:
                 rowId = db.insert(DataContract.FavoriteEntry.TABLE_NAME, null, values);
                 if (rowId > 0)
                     retUri = DataContract.FavoriteEntry.buildUri(rowId);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
-            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
         getContext().getContentResolver().notifyChange(uri, null);
         return retUri;
+    }
+
+    @Override
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        final SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        int rowsInserted = 0;
+
+        switch (sUriMatcher.match(uri)) {
+            case CODE_STOPS:
+                db.beginTransaction();
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(DataContract.StopEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            rowsInserted++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                if (rowsInserted > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+                break;
+            default:
+                return super.bulkInsert(uri, values);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return rowsInserted;
+
     }
 
     @Override
