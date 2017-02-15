@@ -45,11 +45,11 @@ public class DBHelper extends SQLiteOpenHelper {
         */
 
         final String SQL_CREATE_FAVORITE_TABLE =
-                "CREATE TABLE " + FavoriteEntry.TABLE_NAME              + " IF NOT EXISTS (" +
+                "CREATE TABLE IF NOT EXISTS " + FavoriteEntry.TABLE_NAME             + "  (" +
                         FavoriteEntry._ID           + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        FavoriteEntry.COLUMN_ID   + " TEXT NOT NULL, "                     +
+                        FavoriteEntry.COLUMN_ID   + " TEXT NOT NULL, "                       +
                         " FOREIGN KEY (" + FavoriteEntry.COLUMN_ID  + ") REFERENCES " +
-                        StopEntry.TABLE_NAME + " (" + StopEntry.COLUMN_ID + "); ";
+                        StopEntry.TABLE_NAME + " (" + StopEntry.COLUMN_ID + ")); ";
 
         db.execSQL(SQL_CREATE_STOP_TABLE);
 //        db.execSQL(SQL_CREATE_STOP_DETAIL_TABLE);

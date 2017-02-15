@@ -16,6 +16,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void fetchStopsData(View view) {
-        DataUtils.fetchStopsData();
+        DataUtils.fetchStopsData(this);
     }
 }
