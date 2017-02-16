@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +52,7 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
                     int col = cursor.getColumnIndex(DataContract.StopEntry.COLUMN_NAME);
                     Toast.makeText(getContext(), cursor.getString(col), Toast.LENGTH_SHORT).show();
 //                    ((InputQueue.Callback) getActivity()).onItemSelected(cursor.getInt(col));
+                    ((Callback) getActivity()).onItemSelected(cursor.getString(col));
                 }
             }
         });
@@ -96,7 +96,7 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = DataContract.StopEntry.CONTENT_URI;
-        Log.d(LOG_TAG, "CursorLoader created, from " + uri);
+//        Log.d(LOG_TAG, "CursorLoader created, from " + uri);
         return new CursorLoader(getActivity(), uri, null, null, null,
                 DataContract.StopEntry.COLUMN_NAME + " ASC");
     }
@@ -104,21 +104,20 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         stopCursorAdapter.swapCursor(data);
-        if (data == null) {
-            Log.d(LOG_TAG, "Cursor is null");
-        }
-        else{
-            data.moveToPosition(-1);
-            data.moveToNext();
-            Log.d(LOG_TAG, data.getString(1));
-        }
-        Log.d(LOG_TAG, "Load finished");
+//        if (data == null) {
+//            Log.d(LOG_TAG, "Cursor is null");
+//        }
+//        Log.d(LOG_TAG, "Load finished");
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         stopCursorAdapter.swapCursor(null);
-        Log.d(LOG_TAG, "Loader reset");
+//        Log.d(LOG_TAG, "Loader reset");
+    }
+
+    public interface Callback {
+        public void onItemSelected(String name);
     }
 
 //    public interface OnFragmentInteractionListener {

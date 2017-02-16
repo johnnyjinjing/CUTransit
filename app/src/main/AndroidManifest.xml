@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.cutransit" >
+    package="com.example.cutransit">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -9,8 +9,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".ui.MainActivity" >
+        android:theme="@style/AppTheme">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,6 +21,8 @@
         <provider
             android:name=".data.DataProvider"
             android:authorities="com.example.cutransit.provider" />
+
+        <activity android:name=".ui.StopDepartureActivity"></activity>
     </application>
 
 </manifest>
