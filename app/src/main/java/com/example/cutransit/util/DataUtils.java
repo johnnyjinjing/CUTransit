@@ -115,7 +115,8 @@ public class DataUtils {
 
             // Insert into database
             if (cvArray.length > 0) {
-                context.getContentResolver().bulkInsert(DataContract.StopEntry.CONTENT_URI, cvArray);
+                int m = context.getContentResolver().bulkInsert(DataContract.StopEntry.CONTENT_URI, cvArray);
+                Log.d(LOG_TAG, "Insert " + m + " lines into the table");
             }
         } catch (JSONException e) {
             return;

@@ -3,6 +3,7 @@ package com.example.cutransit;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,7 @@ import com.example.cutransit.data.DataContract;
 
 public class StopCursorAdapter extends CursorAdapter {
 
-    private View view;
-    private TextView stopNameTextView;
+    private static final String LOG_TAG = StopCursorAdapter.class.getSimpleName();
 
     public StopCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
@@ -25,14 +25,16 @@ public class StopCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        view = LayoutInflater.from(context).inflate(R.layout.list_item_stop, parent, false);
-        stopNameTextView = (TextView) view.findViewById(R.id.stop_name);
+        View view = LayoutInflater.from(context).inflate(R.layout.list_item_stop, parent, false);
+        Log.d(LOG_TAG, "New view created");
         return view;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name);
         int idxStopName = cursor.getColumnIndex(DataContract.StopEntry.COLUMN_NAME);
         stopNameTextView.setText(cursor.getString(idxStopName));
+        Log.d(LOG_TAG, "View binded");
     }
 }

@@ -46,7 +46,6 @@ public class DataProvider extends ContentProvider {
                         null,
                         null,
                         sortOrder);
-
                 break;
             }
             case CODE_FAVORITES: {
@@ -67,7 +66,7 @@ public class DataProvider extends ContentProvider {
         }
 
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
-        return null;
+        return cursor;
     }
 
     @Nullable

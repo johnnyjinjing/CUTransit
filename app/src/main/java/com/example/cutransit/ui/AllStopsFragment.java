@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,10 @@ import com.example.cutransit.R;
 import com.example.cutransit.StopCursorAdapter;
 import com.example.cutransit.data.DataContract;
 
-public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final String LOG_TAG = AllStopsFragment.class.getSimpleName();
+
     private StopCursorAdapter stopCursorAdapter;
     ListView listView;
     private static final int STOP_LOADER = 0;
@@ -47,7 +51,7 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
                     int col = cursor.getColumnIndex(DataContract.StopEntry.COLUMN_NAME);
-                    Toast.makeText(getContext(),cursor.getString(col), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), cursor.getString(col), Toast.LENGTH_SHORT).show();
 //                    ((InputQueue.Callback) getActivity()).onItemSelected(cursor.getInt(col));
                 }
             }
@@ -92,6 +96,7 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = DataContract.StopEntry.CONTENT_URI;
+        Log.d(LOG_TAG, "CursorLoader created, from " + uri);
         return new CursorLoader(getActivity(), uri, null, null, null,
                 DataContract.StopEntry.COLUMN_NAME + " ASC");
     }
@@ -99,11 +104,21 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         stopCursorAdapter.swapCursor(data);
+        if (data == null) {
+            Log.d(LOG_TAG, "Cursor is null");
+        }
+        else{
+            data.moveToPosition(-1);
+            data.moveToNext();
+            Log.d(LOG_TAG, data.getString(1));
+        }
+        Log.d(LOG_TAG, "Load finished");
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         stopCursorAdapter.swapCursor(null);
+        Log.d(LOG_TAG, "Loader reset");
     }
 
 //    public interface OnFragmentInteractionListener {
