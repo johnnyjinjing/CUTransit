@@ -11,8 +11,17 @@
         android:id="@+id/list_all_departures"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:divider="@null"
-        android:dividerHeight="0dp"/>
+        android:dividerHeight="0dp"
+        android:orientation="vertical" />
+
+    <TextView
+        android:id="@+id/empty_list_all_departures"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No arriving bus at this stop!"
+        android:textSize="24sp"
+        android:visibility="gone" />
 
 </LinearLayout>

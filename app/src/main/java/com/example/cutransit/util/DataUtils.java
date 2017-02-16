@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import com.example.cutransit.BuildConfig;
 import com.example.cutransit.data.DataContract;
@@ -94,8 +95,8 @@ public class DataUtils {
         });
     }
 
-    public static ArrayList<DepartureInfo> FetchStopDepartureData(String id) {
-        final ArrayList<DepartureInfo> result = new ArrayList<DepartureInfo>();
+    public static void FetchStopDepartureData(String id, final ArrayAdapter<DepartureInfo> adapter) {
+        final ArrayList<DepartureInfo> infos = new ArrayList<>();
 
         Uri uri = Uri.parse(QUEST_URL + "/" + PATH_GET_STOP_DEPARTURE).buildUpon()
                 .appendQueryParameter(CUMTD_API_KEY_PARAM, BuildConfig.CUMTD_API_KEY)
@@ -124,7 +125,12 @@ public class DataUtils {
                 // called when response HTTP status is "200 OK"
                 Log.d(LOG_TAG, "Get departure data success");
                 Log.d(LOG_TAG, new String(response));
-                DataUtils.parseStopDepartureDataFromJson(result, new String(response));
+                DataUtils.parseStopDepartureDataFromJson(infos, new String(response));
+                adapter.clear();
+                for (DepartureInfo info:infos) {
+                    adapter.add(info);
+                }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -138,8 +144,6 @@ public class DataUtils {
                 // called when request is retried
             }
         });
-
-        return result;
     }
 
     private static void parseStopsDataFromJson(String s, Context context) {

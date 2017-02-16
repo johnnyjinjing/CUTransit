@@ -12,8 +12,6 @@ import android.widget.TextView;
 import com.example.cutransit.R;
 import com.example.cutransit.model.DepartureInfo;
 
-import java.util.ArrayList;
-
 /**
  * Created by JingJin on 2/15/17.
  */
@@ -21,8 +19,8 @@ import java.util.ArrayList;
 public class DepartureArrayAdapter extends ArrayAdapter<DepartureInfo> {
     Context mContext;
 
-    public DepartureArrayAdapter(Context context, ArrayList<DepartureInfo> infos) {
-        super(context, 0, infos);
+    public DepartureArrayAdapter(Context context) {
+        super(context, 0);
         mContext = context;
     }
 
