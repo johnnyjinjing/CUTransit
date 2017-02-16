@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.cutransit.ui.MainActivity">
 
-    <fragment android:name="com.example.cutransit.ui.AllStopsFragment"
-        android:id="@+id/movies_fragment"
-        android:layout_weight="1"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:elevation="0dp"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabTextColor="#ffffff"
+        app:tabSelectedTextColor="#ffffff"
+        app:tabMode="fixed" />
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,14 +34,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Refresh"/>
+            android:text="Refresh" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Fetch stop info"
-            android:onClick="fetchStopsData"/>
-
+            android:onClick="fetchStopsData"
+            android:text="Fetch stop info" />
     </LinearLayout>
 </LinearLayout>
