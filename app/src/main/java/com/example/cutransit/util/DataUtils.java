@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import com.example.cutransit.BuildConfig;
 import com.example.cutransit.data.DataContract;
@@ -29,25 +28,25 @@ import cz.msebera.android.httpclient.Header;
 public class DataUtils {
     private static final String LOG_TAG = DataUtils.class.getSimpleName();
 
-    private static final String BASE_URL = "https://developer.cumtd.com/api";
-    private static final String VERSION = "v2.2";
-    private static final String FORMAT = "json";
-    private static final String QUEST_URL = BASE_URL + "/" + VERSION + "/" + FORMAT;
+    public static final String BASE_URL = "https://developer.cumtd.com/api";
+    public static final String VERSION = "v2.2";
+    public static final String FORMAT = "json";
+    public static final String QUEST_URL = BASE_URL + "/" + VERSION + "/" + FORMAT;
 
-    private static final String PATH_GET_STOPS = "GetStops";
-    private static final String PATH_GET_STOP_DEPARTURE = "GetDeparturesByStop";
+    public static final String PATH_GET_STOPS = "GetStops";
+    public static final String PATH_GET_STOP_DEPARTURE = "GetDeparturesByStop";
 
-    private static final String CUMTD_API_KEY_PARAM = "key";
-    private static final String CUMTD_API_KEY_STOP = "stops";
-    private static final String CUMTD_API_KEY_STOP_ID = "stop_id";
-    private static final String CUMTD_API_KEY_STOP_NAME = "stop_name";
-    private static final String CUMTD_API_KEY_STOP_CODE = "code";
-    private static final String CUMTD_API_KEY_STOP_DISTANCE = "distance";
-    private static final String CUMTD_API_KEY_DEPARTURE = "departures";
-    private static final String CUMTD_API_KEY_DEPARTURE_HEADSIGN = "headsign";
-    private static final String CUMTD_API_KEY_DEPARTURE_ROUTE = "route";
-    private static final String CUMTD_API_KEY_DEPARTURE_ROUTE_COLOR = "route_color";
-    private static final String CUMTD_API_KEY_DEPARTURE_EXPECT_MINS = "expected_mins";
+    public static final String CUMTD_API_KEY_PARAM = "key";
+    public static final String CUMTD_API_KEY_STOP = "stops";
+    public static final String CUMTD_API_KEY_STOP_ID = "stop_id";
+    public static final String CUMTD_API_KEY_STOP_NAME = "stop_name";
+    public static final String CUMTD_API_KEY_STOP_CODE = "code";
+    public static final String CUMTD_API_KEY_STOP_DISTANCE = "distance";
+    public static final String CUMTD_API_KEY_DEPARTURE = "departures";
+    public static final String CUMTD_API_KEY_DEPARTURE_HEADSIGN = "headsign";
+    public static final String CUMTD_API_KEY_DEPARTURE_ROUTE = "route";
+    public static final String CUMTD_API_KEY_DEPARTURE_ROUTE_COLOR = "route_color";
+    public static final String CUMTD_API_KEY_DEPARTURE_EXPECT_MINS = "expected_mins";
 
     public static void fetchStopsData(final Context context) {
 //        https://developer.cumtd.com/api/v2.2/json/GetStops?key=KEY
@@ -95,56 +94,7 @@ public class DataUtils {
         });
     }
 
-    public static void FetchStopDepartureData(String id, final ArrayAdapter<DepartureInfo> adapter) {
-        final ArrayList<DepartureInfo> infos = new ArrayList<>();
 
-        Uri uri = Uri.parse(QUEST_URL + "/" + PATH_GET_STOP_DEPARTURE).buildUpon()
-                .appendQueryParameter(CUMTD_API_KEY_PARAM, BuildConfig.CUMTD_API_KEY)
-                .appendQueryParameter(CUMTD_API_KEY_STOP_ID, id)
-                .build();
-
-        URL url = null;
-        try {
-            url = new URL(uri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        Log.d(LOG_TAG, "URL is: " + url);
-
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(url.toString(), new AsyncHttpResponseHandler() {
-
-            @Override
-            public void onStart() {
-                // called before request is started
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                // called when response HTTP status is "200 OK"
-                Log.d(LOG_TAG, "Get departure data success");
-                Log.d(LOG_TAG, new String(response));
-                DataUtils.parseStopDepartureDataFromJson(infos, new String(response));
-                adapter.clear();
-                for (DepartureInfo info:infos) {
-                    adapter.add(info);
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.d(LOG_TAG, "Get departure data failure");
-            }
-
-            @Override
-            public void onRetry(int retryNo) {
-                // called when request is retried
-            }
-        });
-    }
 
     private static void parseStopsDataFromJson(String s, Context context) {
 
@@ -183,7 +133,7 @@ public class DataUtils {
         }
     }
 
-    private static void parseStopDepartureDataFromJson(ArrayList<DepartureInfo> stopDeparture, String s) {
+    public static void parseStopDepartureDataFromJson(ArrayList<DepartureInfo> stopDeparture, String s) {
         try {
             JSONObject jsonObject = new JSONObject(s);
 
