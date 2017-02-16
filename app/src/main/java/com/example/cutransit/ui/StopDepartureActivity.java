@@ -3,6 +3,7 @@ package com.example.cutransit.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -29,7 +32,9 @@ public class StopDepartureActivity extends AppCompatActivity {
 
     View rootView;
     ListView listView;
-
+    final Handler handler = new Handler();
+    private Runnable runnable;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +42,7 @@ public class StopDepartureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stop_departure);
 
         String stopName;
-        String stopId;
+        final String stopId;
 
         rootView = findViewById(R.id.activity_stop_departure);
         Intent intent = getIntent();
@@ -46,12 +51,36 @@ public class StopDepartureActivity extends AppCompatActivity {
 
         setTitle(stopName);
 
-        DepartureArrayAdapter adapter = new DepartureArrayAdapter(this);
+        final DepartureArrayAdapter adapter = new DepartureArrayAdapter(this);
         listView = (ListView) rootView.findViewById(R.id.list_all_departures);
         listView.setAdapter(adapter);
 //        listView.setEmptyView(rootView.findViewById(R.id.empty_list_all_departures));
 
-        FetchStopDepartureData(stopId, adapter);
+        timer = new Timer();
+
+        runnable = new Runnable() {
+            public void run() {
+                FetchStopDepartureData(stopId, adapter);
+            }
+        };
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(runnable);
+            }
+        };
+        timer.schedule(task, 0, 1000 * 60);
+
+//        FetchStopDepartureData(stopId, adapter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy called");
+        handler.removeCallbacksAndMessages(runnable);
+        timer.cancel();
     }
 
     public void FetchStopDepartureData(String id, final ArrayAdapter<DepartureInfo> adapter) {
@@ -86,7 +115,7 @@ public class StopDepartureActivity extends AppCompatActivity {
                 Log.d(LOG_TAG, new String(response));
                 DataUtils.parseStopDepartureDataFromJson(infos, new String(response));
                 adapter.clear();
-                for (DepartureInfo info:infos) {
+                for (DepartureInfo info : infos) {
                     adapter.add(info);
                 }
 
