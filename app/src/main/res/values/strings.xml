@@ -2,5 +2,6 @@
     <string name="app_name">CUTransit</string>
 
     <string name="min1">%s MIN</string>
-    <string name="min2">%s MINS</string>
+    <string name="min2">%s MINS</string>action_favorite
+    <string name="action_favorite">(un)Mark as favorite</string>
 </resources>

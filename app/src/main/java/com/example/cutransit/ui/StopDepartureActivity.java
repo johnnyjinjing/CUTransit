@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -39,6 +42,7 @@ public class StopDepartureActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_stop_departure);
 
         String stopName;
@@ -73,6 +77,25 @@ public class StopDepartureActivity extends AppCompatActivity {
         timer.schedule(task, 0, 1000 * 60);
 
 //        FetchStopDepartureData(stopId, adapter);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.favorite, menu);
+        MenuItem item = menu.findItem(R.id.action_favorite);
+        item.setChecked(false);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_favorite) {
+            item.setChecked(!item.isChecked());
+            Log.d(LOG_TAG, "" + item.isChecked());
+            item.setIcon(item.isChecked() ? R.drawable.heart_selected : R.drawable.heart_unselected);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

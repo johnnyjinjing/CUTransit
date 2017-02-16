@@ -38,7 +38,7 @@ public class DataContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_FAVORITES)
                 .build();
-        public static final String TABLE_NAME = "favorite";
+        public static final String TABLE_NAME = "favorite.xml";
         public static final String COLUMN_ID = "id";
 
         public static Uri buildUri(long id) {

@@ -17,12 +17,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.StopDepartureActivity"/>
+            <!--android:theme="@style/NoActionBar"/>-->
 
         <provider
             android:name=".data.DataProvider"
             android:authorities="com.example.cutransit.provider" />
 
-        <activity android:name=".ui.StopDepartureActivity"></activity>
     </application>
+
 
 </manifest>
