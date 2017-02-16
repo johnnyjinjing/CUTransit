@@ -1,4 +1,4 @@
-package com.example.cutransit;
+package com.example.cutransit.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.cutransit.R;
 import com.example.cutransit.data.DataContract;
 
 /**

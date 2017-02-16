@@ -15,7 +15,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.cutransit.R;
-import com.example.cutransit.StopCursorAdapter;
+import com.example.cutransit.adapter.StopCursorAdapter;
 import com.example.cutransit.data.DataContract;
 
 public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -49,7 +49,7 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
                 // Cursor adapter returns a cursor at position for getItem(), or null
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
-                    int col = cursor.getColumnIndex(DataContract.StopEntry.COLUMN_NAME);
+                    int col = cursor.getColumnIndex(DataContract.StopEntry.COLUMN_ID);
                     Toast.makeText(getContext(), cursor.getString(col), Toast.LENGTH_SHORT).show();
 //                    ((InputQueue.Callback) getActivity()).onItemSelected(cursor.getInt(col));
                     ((Callback) getActivity()).onItemSelected(cursor.getString(col));

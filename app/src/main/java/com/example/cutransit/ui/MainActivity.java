@@ -10,7 +10,7 @@ import com.example.cutransit.util.DataUtils;
 
 public class MainActivity extends AppCompatActivity implements AllStopsFragment.Callback{
 
-    static final String INTENT_EXTRA_STOP_NAME = "stop_name";
+    static final String INTENT_EXTRA_STOP_ID = "id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +24,9 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
 
 
     @Override
-    public void onItemSelected(String name) {
+    public void onItemSelected(String id) {
         Intent intent = new Intent(this, StopDepartureActivity.class)
-                .putExtra(INTENT_EXTRA_STOP_NAME, name);
+                .putExtra(INTENT_EXTRA_STOP_ID, id);
         startActivity(intent);
     }
 }

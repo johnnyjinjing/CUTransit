@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.cutransit.BuildConfig;
 import com.example.cutransit.data.DataContract;
+import com.example.cutransit.model.DepartureInfo;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -32,19 +34,72 @@ public class DataUtils {
     private static final String QUEST_URL = BASE_URL + "/" + VERSION + "/" + FORMAT;
 
     private static final String PATH_GET_STOPS = "GetStops";
-    private static final String API_KEY_PARAM = "key";
+    private static final String PATH_GET_STOP_DEPARTURE = "GetDeparturesByStop";
 
-    private static final String CUMTD_API_KEY_STOPS = "stops";
+    private static final String CUMTD_API_KEY_PARAM = "key";
+    private static final String CUMTD_API_KEY_STOP = "stops";
     private static final String CUMTD_API_KEY_STOP_ID = "stop_id";
     private static final String CUMTD_API_KEY_STOP_NAME = "stop_name";
     private static final String CUMTD_API_KEY_STOP_CODE = "code";
     private static final String CUMTD_API_KEY_STOP_DISTANCE = "distance";
+    private static final String CUMTD_API_KEY_DEPARTURE = "departures";
+    private static final String CUMTD_API_KEY_DEPARTURE_HEADSIGN = "headsign";
+    private static final String CUMTD_API_KEY_DEPARTURE_ROUTE = "route";
+    private static final String CUMTD_API_KEY_DEPARTURE_ROUTE_COLOR = "route_color";
+    private static final String CUMTD_API_KEY_DEPARTURE_EXPECT_MINS = "expected_mins";
 
     public static void fetchStopsData(final Context context) {
 //        https://developer.cumtd.com/api/v2.2/json/GetStops?key=KEY
 
         Uri uri = Uri.parse(QUEST_URL + "/" + PATH_GET_STOPS).buildUpon()
-                .appendQueryParameter(API_KEY_PARAM, BuildConfig.CUMTD_API_KEY)
+                .appendQueryParameter(CUMTD_API_KEY_PARAM, BuildConfig.CUMTD_API_KEY)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(uri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(LOG_TAG, "URL is: " + url);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(url.toString(), new AsyncHttpResponseHandler() {
+
+
+            @Override
+            public void onStart() {
+                // called before request is started
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                // called when response HTTP status is "200 OK"
+                Log.d(LOG_TAG, "Get stop data success");
+//                Log.d(LOG_TAG, new String(response));
+
+                DataUtils.parseStopsDataFromJson(new String(response), context);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+            }
+        });
+    }
+
+    public static ArrayList<DepartureInfo> FetchStopDepartureData(String id) {
+        final ArrayList<DepartureInfo> result = new ArrayList<DepartureInfo>();
+
+        Uri uri = Uri.parse(QUEST_URL + "/" + PATH_GET_STOP_DEPARTURE).buildUpon()
+                .appendQueryParameter(CUMTD_API_KEY_PARAM, BuildConfig.CUMTD_API_KEY)
+                .appendQueryParameter(CUMTD_API_KEY_STOP_ID, id)
                 .build();
 
         URL url = null;
@@ -67,15 +122,15 @@ public class DataUtils {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                 // called when response HTTP status is "200 OK"
-                Log.d(LOG_TAG, "Get stop data success");
-//                Log.d(LOG_TAG, new String(response));
-
-                DataUtils.getStopsDataFromJson(new String(response), context);
+                Log.d(LOG_TAG, "Get departure data success");
+                Log.d(LOG_TAG, new String(response));
+                DataUtils.parseStopDepartureDataFromJson(result, new String(response));
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.d(LOG_TAG, "Get departure data failure");
             }
 
             @Override
@@ -83,14 +138,16 @@ public class DataUtils {
                 // called when request is retried
             }
         });
+
+        return result;
     }
 
-    private static void getStopsDataFromJson(String s, Context context) {
+    private static void parseStopsDataFromJson(String s, Context context) {
 
         try {
             JSONObject jsonObject = new JSONObject(s);
 
-            JSONArray jsonArray = jsonObject.getJSONArray(CUMTD_API_KEY_STOPS);
+            JSONArray jsonArray = jsonObject.getJSONArray(CUMTD_API_KEY_STOP);
 
             // An array of values for bulkInsert
             int n = jsonArray.length();
@@ -119,8 +176,32 @@ public class DataUtils {
                 Log.d(LOG_TAG, "Insert " + m + " lines into the table");
             }
         } catch (JSONException e) {
-            return;
         }
-        return;
     }
+
+    private static void parseStopDepartureDataFromJson(ArrayList<DepartureInfo> stopDeparture, String s) {
+        try {
+            JSONObject jsonObject = new JSONObject(s);
+
+            JSONArray jsonArray = jsonObject.getJSONArray(CUMTD_API_KEY_DEPARTURE);
+
+            int n = jsonArray.length();
+
+            for (int i = 0; i < n; i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
+
+                DepartureInfo info = new DepartureInfo(obj.getString(CUMTD_API_KEY_DEPARTURE_HEADSIGN),
+                        obj.getJSONObject(CUMTD_API_KEY_DEPARTURE_ROUTE).getString(CUMTD_API_KEY_DEPARTURE_ROUTE_COLOR),
+                        obj.getString(CUMTD_API_KEY_DEPARTURE_EXPECT_MINS));
+                stopDeparture.add(info);
+                Log.d(LOG_TAG, obj.getString(CUMTD_API_KEY_DEPARTURE_HEADSIGN) + " " +
+                        obj.getJSONObject(CUMTD_API_KEY_DEPARTURE_ROUTE).getString(CUMTD_API_KEY_DEPARTURE_ROUTE_COLOR) + " " +
+                        obj.getString(CUMTD_API_KEY_DEPARTURE_EXPECT_MINS));
+            }
+
+        } catch (JSONException e) {
+        }
+    }
+
+
 }
