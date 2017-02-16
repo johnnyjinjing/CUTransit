@@ -1,10 +1,12 @@
 package com.example.cutransit.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.cutransit.R;
@@ -17,8 +19,11 @@ import java.util.ArrayList;
  */
 
 public class DepartureArrayAdapter extends ArrayAdapter<DepartureInfo> {
+    Context mContext;
+
     public DepartureArrayAdapter(Context context, ArrayList<DepartureInfo> infos) {
         super(context, 0, infos);
+        mContext = context;
     }
 
     @Override
@@ -30,8 +35,21 @@ public class DepartureArrayAdapter extends ArrayAdapter<DepartureInfo> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_departure, parent, false);
         }
 
-        TextView tv = (TextView) convertView.findViewById(R.id.departure_info);
-        tv.setText(info.headSign);
+        LinearLayout ll = (LinearLayout) convertView.findViewById(R.id.departure_info);
+        ll.setBackgroundColor(Color.parseColor("#" + info.routeColor));
+
+        TextView tv1 = (TextView) convertView.findViewById(R.id.departure_info_route);
+        tv1.setText(info.headSign);
+
+        TextView tv2 = (TextView) convertView.findViewById(R.id.departure_info_time);
+        String expMin = info.expectedMins;
+        if (expMin.equals("0")) {
+            tv2.setText("DUE");
+        } else if (expMin.equals("1")) {
+            tv2.setText(String.format(mContext.getResources().getString(R.string.min1), expMin));
+        } else {
+            tv2.setText(String.format(mContext.getResources().getString(R.string.min2), expMin));
+        }
 
         return convertView;
     }

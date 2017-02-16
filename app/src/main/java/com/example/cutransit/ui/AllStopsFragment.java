@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.cutransit.R;
 import com.example.cutransit.adapter.StopCursorAdapter;
@@ -49,10 +48,11 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
                 // Cursor adapter returns a cursor at position for getItem(), or null
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
-                    int col = cursor.getColumnIndex(DataContract.StopEntry.COLUMN_ID);
-                    Toast.makeText(getContext(), cursor.getString(col), Toast.LENGTH_SHORT).show();
+                    int colId = cursor.getColumnIndex(DataContract.StopEntry.COLUMN_ID);
+                    int colName = cursor.getColumnIndex(DataContract.StopEntry.COLUMN_NAME);
+//                    Toast.makeText(getContext(), cursor.getString(col), Toast.LENGTH_SHORT).show();
 //                    ((InputQueue.Callback) getActivity()).onItemSelected(cursor.getInt(col));
-                    ((Callback) getActivity()).onItemSelected(cursor.getString(col));
+                    ((Callback) getActivity()).onItemSelected(cursor.getString(colId), cursor.getString(colName));
                 }
             }
         });
@@ -117,7 +117,7 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     public interface Callback {
-        public void onItemSelected(String name);
+        public void onItemSelected(String id, String name);
     }
 
 //    public interface OnFragmentInteractionListener {
