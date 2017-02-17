@@ -1,5 +1,6 @@
 package com.example.cutransit.data;
 
+import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -19,9 +20,11 @@ public class DataProvider extends ContentProvider {
     private DBHelper mDBHelper;
 
     public static final int CODE_STOPS = 100;
+    public static final int CODE_SUGGESTION = 101;
 
-     static {
+    static {
         sUriMatcher.addURI(authority, DataContract.PATH_STOPS, CODE_STOPS);
+        sUriMatcher.addURI(authority, SearchManager.SUGGEST_URI_PATH_QUERY, CODE_SUGGESTION);
     }
 
     @Override
@@ -44,6 +47,20 @@ public class DataProvider extends ContentProvider {
                         null,
                         null,
                         sortOrder);
+                break;
+            }
+            case CODE_SUGGESTION: {
+                cursor = mDBHelper.getReadableDatabase().query(
+                        DataContract.StopEntry.TABLE_NAME,
+                        new String[]{
+                                DataContract.StopEntry._ID,
+                                DataContract.StopEntry.COLUMN_NAME + " AS " + SearchManager.SUGGEST_COLUMN_TEXT_1
+                        },
+                        selection,
+                        new String[]{"%" + selectionArgs[0] + "%"},
+                        null,
+                        null,
+                        DataContract.StopEntry.COLUMN_NAME + " ASC");
                 break;
             }
             default:

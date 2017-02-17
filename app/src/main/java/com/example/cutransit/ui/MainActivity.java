@@ -10,9 +10,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.support.v7.widget.SearchView;
 
 import com.example.cutransit.R;
 import com.example.cutransit.data.DBHelper;
@@ -72,8 +72,19 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(false);
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return true;
     }
 
@@ -124,4 +135,5 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
     private void searchStops(String name) {
 
     }
+
 }
