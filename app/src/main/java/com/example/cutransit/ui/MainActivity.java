@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -56,11 +57,15 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
         tabLayout.setupWithViewPager(mPager);
 
         // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            searchStops(query);
-        }
+//        Intent intent = getIntent();
+//        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+//        }else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+//            Log.d(LOG_TAG, "Suggesting item selected");
+//            Log.d(LOG_TAG, intent.getData().toString());
+//        }
+//        else{
+//            Log.d(LOG_TAG, "Intent action does not recognize.");
+//        }
     }
 
     @Override
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setSubmitButtonEnabled(false);
+//        searchView.setSubmitButtonEnabled(false);
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -90,11 +95,32 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
 
     @Override
     public void onItemSelected(String id, String name, int favorite) {
+        launchDepartureActivity(id, name, favorite);
+    }
+
+    private void launchDepartureActivity(String id, String name, int favorite) {
         Intent intent = new Intent(this, StopDepartureActivity.class)
                 .putExtra(INTENT_EXTRA_STOP_ID, id)
                 .putExtra(INTENT_EXTRA_STOP_NAME, name)
                 .putExtra(INTENT_EXTRA_STOP_FAVORITE, favorite);
         startActivity(intent);
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d(LOG_TAG, "New intent received");
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        }
+        //this else if is called when you will press Search Icon  or Go (on soft keyboard)
+        else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Log.d(LOG_TAG, "Suggesting item selected");
+            Log.d(LOG_TAG, " " + intent.getData() + " " + intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
+            launchDepartureActivity(intent.getData().toString(), "test", Integer.parseInt(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY)));
+        }
+        else{
+            Log.d(LOG_TAG, "Intent action does not recognize.");
+        }
     }
 
     public static class FragmentAdapter extends FragmentPagerAdapter {
@@ -130,10 +156,6 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
     private boolean checkDataBase(Context context, String db) {
         File dbFile = context.getDatabasePath(db);
         return dbFile.exists();
-    }
-
-    private void searchStops(String name) {
-
     }
 
 }

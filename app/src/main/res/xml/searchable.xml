@@ -4,5 +4,6 @@
     android:hint="@string/search_hint"
     android:searchSuggestAuthority="com.example.cutransit.provider"
     android:searchSuggestSelection="name like ?"
-    android:imeOptions="actionNext">
+    android:imeOptions="actionNext"
+    android:searchSuggestIntentAction="android.intent.action.VIEW">
 </searchable>
