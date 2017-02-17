@@ -1,6 +1,8 @@
 package com.example.cutransit.ui;
 
+import android.content.AsyncQueryHandler;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.ListView;
 import com.example.cutransit.BuildConfig;
 import com.example.cutransit.R;
 import com.example.cutransit.adapter.NearbyStopArrayAdapter;
+import com.example.cutransit.data.DataContract;
 import com.example.cutransit.model.NearbyStopInfo;
 import com.example.cutransit.util.DataUtils;
 import com.google.android.gms.common.ConnectionResult;
@@ -51,7 +53,6 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
     GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private static final int PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 100;
-    private int count = 0;
 
     NearbyStopArrayAdapter adapter;
 
@@ -84,8 +85,29 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 NearbyStopInfo info = (NearbyStopInfo) parent.getItemAtPosition(position);
                 if (info != null) {
-                    ((NearbyStopsFragment.Callback) getActivity()).onItemSelected(info.id,
-                            info.stop_name, 0);
+                    new AsyncQueryHandler(getActivity().getContentResolver()) {
+                        @Override
+                        protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+                            if (cursor == null) {
+                                // Some providers return null if an error occurs whereas others throw an exception
+                            } else if (cursor.getCount() < 1) {
+                                // No matches found
+                            } else {
+                                cursor.moveToFirst();
+                                ((NearbyStopsFragment.Callback) getActivity()).onItemSelected(
+                                        cursor.getString(cursor.getColumnIndex(DataContract.StopEntry.COLUMN_ID)),
+                                        cursor.getString(cursor.getColumnIndex(DataContract.StopEntry.COLUMN_NAME)),
+                                        cursor.getInt(cursor.getColumnIndex(DataContract.StopEntry.COLUMN_FAVORITE)));
+                            }
+                        }
+                    }.startQuery(
+                            1, null,
+                            DataContract.StopEntry.CONTENT_URI,
+                            null,
+                            DataContract.StopEntry.TABLE_NAME + "." + DataContract.StopEntry.COLUMN_ID + " = ? ",
+                            new String[]{info.id},
+                            null
+                    );
                 }
             }
         });
@@ -125,9 +147,8 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
     }
 
     private void handleNewLocation(Location location) {
-
         FetchNearbyStop(adapter, location.getLatitude(), location.getLongitude());
-        Log.d(LOG_TAG, location.toString());
+//        Log.d(LOG_TAG, location.toString());
     }
 
     @Override
@@ -137,7 +158,7 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(LOG_TAG, "Location service failed");
+//        Log.d(LOG_TAG, "Location service failed");
     }
 
     @Override
@@ -197,7 +218,7 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
             e.printStackTrace();
         }
 
-        Log.d(LOG_TAG, "URL is: " + url);
+//        Log.d(LOG_TAG, "URL is: " + url);
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url.toString(), new AsyncHttpResponseHandler() {
@@ -210,7 +231,7 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                 // called when response HTTP status is "200 OK"
-                Log.d(LOG_TAG, "Get nearby stop success");
+//                Log.d(LOG_TAG, "Get nearby stop success");
                 DataUtils.parseNearbyStopsDataFromJson(infos, new String(response));
                 adapter.clear();
                 for (NearbyStopInfo info : infos) {
@@ -225,7 +246,7 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.d(LOG_TAG, "Get nearby stop failure");
+//                Log.d(LOG_TAG, "Get nearby stop failure");
             }
 
             @Override
@@ -236,7 +257,7 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
     }
 
     public interface Callback {
-        public void onItemSelected(String id, String name, int favorite);
+        void onItemSelected(String id, String name, int favorite);
     }
 
 }
