@@ -1,5 +1,9 @@
 package com.example.cutransit.ui;
 
+/**
+ * Created by JingJin on 2/16/17.
+ */
+
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +21,7 @@ import com.example.cutransit.R;
 import com.example.cutransit.adapter.StopCursorAdapter;
 import com.example.cutransit.data.DataContract;
 
-public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FavoriteStopsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = AllStopsFragment.class.getSimpleName();
 
@@ -40,7 +44,7 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
 
         listView = (ListView) rootView.findViewById(R.id.list_all_stops);
         listView.setAdapter(stopCursorAdapter);
-        listView.setEmptyView(rootView.findViewById(R.id.empty_list_all_stops));
+        listView.setEmptyView(rootView.findViewById(R.id.empty_list_favorite_stops));
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -71,7 +75,9 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = DataContract.StopEntry.CONTENT_URI;
 //        Log.d(LOG_TAG, "CursorLoader created, from " + uri);
-        return new CursorLoader(getActivity(), uri, null, null, null,
+        return new CursorLoader(getActivity(), uri, null,
+                DataContract.StopEntry.TABLE_NAME + "." + DataContract.StopEntry.COLUMN_FAVORITE + " = ? ",
+                new String[]{"1"},
                 DataContract.StopEntry.COLUMN_NAME + " ASC");
     }
 
@@ -94,3 +100,4 @@ public class AllStopsFragment extends Fragment implements LoaderManager.LoaderCa
         public void onItemSelected(String id, String name, int favorite);
     }
 }
+

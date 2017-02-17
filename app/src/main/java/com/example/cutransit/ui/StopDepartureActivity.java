@@ -1,5 +1,6 @@
 package com.example.cutransit.ui;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import com.example.cutransit.BuildConfig;
 import com.example.cutransit.R;
 import com.example.cutransit.adapter.DepartureArrayAdapter;
+import com.example.cutransit.data.DataContract;
 import com.example.cutransit.model.DepartureInfo;
 import com.example.cutransit.util.DataUtils;
 import com.loopj.android.http.AsyncHttpClient;
@@ -39,6 +41,9 @@ public class StopDepartureActivity extends AppCompatActivity {
     private Runnable runnable;
     private Timer timer;
 
+    int stopFavorite;
+    String stopId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,12 +51,13 @@ public class StopDepartureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stop_departure);
 
         String stopName;
-        final String stopId;
 
         rootView = findViewById(R.id.activity_stop_departure);
         Intent intent = getIntent();
         stopName = intent.getStringExtra(MainActivity.INTENT_EXTRA_STOP_NAME);
         stopId = intent.getStringExtra(MainActivity.INTENT_EXTRA_STOP_ID);
+        stopFavorite = intent.getIntExtra(MainActivity.INTENT_EXTRA_STOP_FAVORITE, 0);
+
 
         setTitle(stopName);
 
@@ -83,7 +89,8 @@ public class StopDepartureActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.favorite, menu);
         MenuItem item = menu.findItem(R.id.action_favorite);
-        item.setChecked(false);
+        item.setChecked(stopFavorite == 1);
+        item.setIcon(item.isChecked() ? R.drawable.heart_selected : R.drawable.heart_unselected);
         return true;
     }
 
@@ -93,6 +100,15 @@ public class StopDepartureActivity extends AppCompatActivity {
             item.setChecked(!item.isChecked());
             Log.d(LOG_TAG, "" + item.isChecked());
             item.setIcon(item.isChecked() ? R.drawable.heart_selected : R.drawable.heart_unselected);
+
+            ContentValues cv = new ContentValues();
+            cv.put(DataContract.StopEntry.COLUMN_FAVORITE, item.isChecked() ? "1" : "0");
+            getContentResolver().update(DataContract.StopEntry.CONTENT_URI,
+                    cv,
+                    DataContract.StopEntry.TABLE_NAME + "." +
+                            DataContract.StopEntry.COLUMN_ID + " = ? ",
+                    new String[]{stopId});
+
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -16,7 +16,7 @@ import com.example.cutransit.util.DataUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AllStopsFragment.Callback {
+public class MainActivity extends AppCompatActivity implements AllStopsFragment.Callback, FavoriteStopsFragment.Callback {
 
     private ViewPager mPager;
     FragmentAdapter mAdapter;
@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
 
     static final String INTENT_EXTRA_STOP_ID = "id";
     static final String INTENT_EXTRA_STOP_NAME = "name";
+    static final String INTENT_EXTRA_STOP_FAVORITE = "favorite";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
 
         mAdapter = new FragmentAdapter(getSupportFragmentManager());
         mAdapter.addFragment(new AllStopsFragment(), "All Stops");
-        mAdapter.addFragment(new AllStopsFragment(), "Favorites");
+        mAdapter.addFragment(new FavoriteStopsFragment(), "Favorites");
         mAdapter.addFragment(new AllStopsFragment(), "Nearby");
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
@@ -49,10 +50,11 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
 
 
     @Override
-    public void onItemSelected(String id, String name) {
+    public void onItemSelected(String id, String name, int favorite) {
         Intent intent = new Intent(this, StopDepartureActivity.class)
                 .putExtra(INTENT_EXTRA_STOP_ID, id)
-                .putExtra(INTENT_EXTRA_STOP_NAME, name);
+                .putExtra(INTENT_EXTRA_STOP_NAME, name)
+                .putExtra(INTENT_EXTRA_STOP_FAVORITE, favorite);
         startActivity(intent);
     }
 

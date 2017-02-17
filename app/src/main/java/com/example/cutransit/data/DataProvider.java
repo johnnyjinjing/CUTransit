@@ -120,6 +120,20 @@ public class DataProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        throw new RuntimeException("We are not implementing update in CUTransit.");
+        final SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        int rowId;
+
+        switch (sUriMatcher.match(uri)) {
+            case CODE_STOPS:
+                rowId = db.update(DataContract.StopEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        if (rowId != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowId;
     }
 }
