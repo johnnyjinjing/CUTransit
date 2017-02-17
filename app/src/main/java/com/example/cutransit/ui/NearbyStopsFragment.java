@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -78,6 +79,16 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
         listView = (ListView) rootView.findViewById(R.id.list_nearby_stops);
         adapter = new NearbyStopArrayAdapter(getActivity());
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                NearbyStopInfo info = (NearbyStopInfo) parent.getItemAtPosition(position);
+                if (info != null) {
+                    ((NearbyStopsFragment.Callback) getActivity()).onItemSelected(info.id,
+                            info.stop_name, 0);
+                }
+            }
+        });
 
         return rootView;
     }
@@ -200,16 +211,14 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                 // called when response HTTP status is "200 OK"
                 Log.d(LOG_TAG, "Get nearby stop success");
-                Log.d(LOG_TAG, new String(response));
                 DataUtils.parseNearbyStopsDataFromJson(infos, new String(response));
                 adapter.clear();
                 for (NearbyStopInfo info : infos) {
                     adapter.add(info);
-                    Log.d(LOG_TAG, "Info added");
                 }
 
                 // Delay the empty view binding to avoid flashing
-//                listView.setEmptyView(rootView.findViewById(R.id.empty_list_all_departures));
+                listView.setEmptyView(rootView.findViewById(R.id.empty_list_nearby_stops));
                 adapter.notifyDataSetChanged();
             }
 
@@ -224,6 +233,10 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
                 // called when request is retried
             }
         });
+    }
+
+    public interface Callback {
+        public void onItemSelected(String id, String name, int favorite);
     }
 
 }

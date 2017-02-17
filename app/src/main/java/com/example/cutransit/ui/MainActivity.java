@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AllStopsFragment.Callback,
-        FavoriteStopsFragment.Callback {
+        FavoriteStopsFragment.Callback, NearbyStopsFragment.Callback{
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 

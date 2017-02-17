@@ -171,12 +171,13 @@ public class DataUtils {
                 JSONObject obj = jsonArray.getJSONObject(i);
 
                 NearbyStopInfo info = new NearbyStopInfo(obj.getString(CUMTD_API_KEY_STOP_NAME),
-                        obj.getDouble(CUMTD_API_KEY_STOP_DISTANCE));
+                        obj.getDouble(CUMTD_API_KEY_STOP_DISTANCE), obj.getString(CUMTD_API_KEY_STOP_ID));
 
                 nearbyStops.add(info);
 
                 Log.d(LOG_TAG, obj.getString(CUMTD_API_KEY_STOP_NAME) + " " +
-                                obj.getDouble(CUMTD_API_KEY_STOP_DISTANCE));
+                        obj.getDouble(CUMTD_API_KEY_STOP_DISTANCE) + " " +
+                        obj.getString(CUMTD_API_KEY_STOP_ID));
             }
 
         } catch (JSONException e) {

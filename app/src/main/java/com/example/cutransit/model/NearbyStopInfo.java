@@ -7,9 +7,11 @@ package com.example.cutransit.model;
 public class NearbyStopInfo {
     public String stop_name;
     public double distance;
+    public String id;
 
-    public NearbyStopInfo(String stop_name, double distance){
+    public NearbyStopInfo(String stop_name, double distance, String id){
         this.stop_name = stop_name;
         this.distance = distance;
+        this.id = id;
     }
 }
