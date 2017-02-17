@@ -3,5 +3,10 @@
 
     <string name="min1">%s MIN</string>
     <string name="min2">%s MINS</string>action_favorite
+
     <string name="action_favorite">(un)Mark as favorite</string>
+    <string name="action_search">Search for a stop</string>
+
+
+    <string name="search_hint">Enter stop name</string>
 </resources>
