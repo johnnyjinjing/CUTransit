@@ -19,11 +19,9 @@ public class DataProvider extends ContentProvider {
     private DBHelper mDBHelper;
 
     public static final int CODE_STOPS = 100;
-    public static final int CODE_FAVORITES = 101;
 
      static {
         sUriMatcher.addURI(authority, DataContract.PATH_STOPS, CODE_STOPS);
-        sUriMatcher.addURI(authority, DataContract.PATH_FAVORITES, CODE_FAVORITES);
     }
 
     @Override
@@ -48,19 +46,6 @@ public class DataProvider extends ContentProvider {
                         sortOrder);
                 break;
             }
-            case CODE_FAVORITES: {
-                cursor = mDBHelper.getReadableDatabase().query(
-                        DataContract.FavoriteEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder);
-
-                break;
-            }
-
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -90,17 +75,9 @@ public class DataProvider extends ContentProvider {
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
-            case CODE_FAVORITES:
-                rowId = db.insert(DataContract.FavoriteEntry.TABLE_NAME, null, values);
-                if (rowId > 0)
-                    retUri = DataContract.FavoriteEntry.buildUri(rowId);
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
-                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-
         getContext().getContentResolver().notifyChange(uri, null);
         return retUri;
     }
@@ -138,23 +115,7 @@ public class DataProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        final SQLiteDatabase db = mDBHelper.getWritableDatabase();
-        int nRowsDeleted;
-
-        switch (sUriMatcher.match(uri)) {
-            case CODE_FAVORITES: {
-                nRowsDeleted = db.delete(DataContract.FavoriteEntry.TABLE_NAME, selection, selectionArgs);
-                break;
-            }
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
-        }
-
-        if (nRowsDeleted != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
-        }
-
-        return 0;
+        throw new RuntimeException("We are not implementing DELETE in CUTransit.");
     }
 
     @Override
