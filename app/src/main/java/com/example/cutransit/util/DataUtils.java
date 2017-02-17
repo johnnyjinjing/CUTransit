@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.cutransit.BuildConfig;
 import com.example.cutransit.data.DataContract;
 import com.example.cutransit.model.DepartureInfo;
+import com.example.cutransit.model.NearbyStopInfo;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -35,6 +36,7 @@ public class DataUtils {
 
     public static final String PATH_GET_STOPS = "GetStops";
     public static final String PATH_GET_STOP_DEPARTURE = "GetDeparturesByStop";
+    public static final String PATH_GET_NEARBY_STOPS = "GetStopsByLatLon";
 
     public static final String CUMTD_API_KEY_PARAM = "key";
     public static final String CUMTD_API_KEY_STOP = "stops";
@@ -47,6 +49,8 @@ public class DataUtils {
     public static final String CUMTD_API_KEY_DEPARTURE_ROUTE = "route";
     public static final String CUMTD_API_KEY_DEPARTURE_ROUTE_COLOR = "route_color";
     public static final String CUMTD_API_KEY_DEPARTURE_EXPECT_MINS = "expected_mins";
+    public static final String CUMTD_API_KEY_LAT = "lat";
+    public static final String CUMTD_API_KEY_LON = "lon";
 
     public static void fetchStopsData(final Context context) {
 //        https://developer.cumtd.com/api/v2.2/json/GetStops?key=KEY
@@ -114,12 +118,12 @@ public class DataUtils {
                 cv.put(DataContract.StopEntry.COLUMN_ID, stopJsonObject.getString(CUMTD_API_KEY_STOP_ID));
                 cv.put(DataContract.StopEntry.COLUMN_NAME, stopJsonObject.getString(CUMTD_API_KEY_STOP_NAME));
                 cv.put(DataContract.StopEntry.COLUMN_CODE, stopJsonObject.getString(CUMTD_API_KEY_STOP_CODE));
-                cv.put(DataContract.StopEntry.COLUMN_DISTANCE, stopJsonObject.getString(CUMTD_API_KEY_STOP_DISTANCE));
+                cv.put(DataContract.StopEntry.COLUMN_DISTANCE, stopJsonObject.getDouble(CUMTD_API_KEY_STOP_DISTANCE));
                 cvArray[i] = cv;
                 Log.d(LOG_TAG, stopJsonObject.getString(CUMTD_API_KEY_STOP_ID) + " " +
                         stopJsonObject.getString(CUMTD_API_KEY_STOP_NAME) + " " +
                         stopJsonObject.getString(CUMTD_API_KEY_STOP_CODE) + " " +
-                        stopJsonObject.getString(CUMTD_API_KEY_STOP_DISTANCE));
+                        stopJsonObject.getDouble(CUMTD_API_KEY_STOP_DISTANCE));
             }
 
             // Insert into database
@@ -152,6 +156,31 @@ public class DataUtils {
             }
 
         } catch (JSONException e) {
+        }
+    }
+
+    public static void parseNearbyStopsDataFromJson(ArrayList<NearbyStopInfo> nearbyStops, String s) {
+        try {
+            JSONObject jsonObject = new JSONObject(s);
+
+            JSONArray jsonArray = jsonObject.getJSONArray(CUMTD_API_KEY_STOP);
+
+            int n = jsonArray.length();
+
+            for (int i = 0; i < n; i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
+
+                NearbyStopInfo info = new NearbyStopInfo(obj.getString(CUMTD_API_KEY_STOP_NAME),
+                        obj.getDouble(CUMTD_API_KEY_STOP_DISTANCE));
+
+                nearbyStops.add(info);
+
+                Log.d(LOG_TAG, obj.getString(CUMTD_API_KEY_STOP_NAME) + " " +
+                                obj.getDouble(CUMTD_API_KEY_STOP_DISTANCE));
+            }
+
+        } catch (JSONException e) {
+            Log.d(LOG_TAG, "Error in adding data");
         }
     }
 

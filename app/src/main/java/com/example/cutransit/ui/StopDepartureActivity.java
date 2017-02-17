@@ -58,7 +58,6 @@ public class StopDepartureActivity extends AppCompatActivity {
         stopId = intent.getStringExtra(MainActivity.INTENT_EXTRA_STOP_ID);
         stopFavorite = intent.getIntExtra(MainActivity.INTENT_EXTRA_STOP_FAVORITE, 0);
 
-
         setTitle(stopName);
 
         final DepartureArrayAdapter adapter = new DepartureArrayAdapter(this);
