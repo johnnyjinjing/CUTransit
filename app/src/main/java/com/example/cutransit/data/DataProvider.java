@@ -56,7 +56,8 @@ public class DataProvider extends ContentProvider {
                                 DataContract.StopEntry._ID,
                                 DataContract.StopEntry.COLUMN_ID + " AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA,
                                 DataContract.StopEntry.COLUMN_NAME + " AS " + SearchManager.SUGGEST_COLUMN_TEXT_1,
-                                DataContract.StopEntry.COLUMN_FAVORITE + " AS " + SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA
+                                DataContract.StopEntry.COLUMN_NAME + " || " +DataContract.StopEntry.COLUMN_FAVORITE +
+                                        " AS " + SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA
                         },
                         selection,
                         new String[]{"%" + selectionArgs[0] + "%"},

@@ -116,7 +116,10 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
         else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             Log.d(LOG_TAG, "Suggesting item selected");
             Log.d(LOG_TAG, " " + intent.getData() + " " + intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
-            launchDepartureActivity(intent.getData().toString(), "test", Integer.parseInt(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY)));
+            String extra = intent.getStringExtra(SearchManager.EXTRA_DATA_KEY);
+            String name = extra.substring(0, extra.length() - 1);
+            int favorite = Integer.parseInt(extra.substring(extra.length() - 1));
+            launchDepartureActivity(intent.getData().toString(), name, favorite);
         }
         else{
             Log.d(LOG_TAG, "Intent action does not recognize.");
