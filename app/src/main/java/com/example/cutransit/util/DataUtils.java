@@ -94,8 +94,6 @@ public class DataUtils {
         });
     }
 
-
-
     private static void parseStopsDataFromJson(String s, Context context) {
 
         try {
