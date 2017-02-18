@@ -8,15 +8,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.cutransit.BuildConfig;
 import com.example.cutransit.R;
@@ -49,6 +50,7 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
 
     View rootView;
     ListView listView;
+    TextView tv_permission;
 
     GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -112,37 +114,45 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
             }
         });
 
+        tv_permission = (TextView) rootView.findViewById(R.id.permission_status);
+
         return rootView;
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
-        } else {
-            if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+        Log.d(LOG_TAG, "Google api connected");
 
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
-                    // Show an expanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
+            Log.d(LOG_TAG, "Try getting permission");
 
-                } else {
+            // Should we show an explanation?
+            if (shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Log.d(LOG_TAG, "Not really try getting permission!");
 
-                    // No explanation needed, we can request the permission.
-                    // PERMISSION_REQUEST_ACCESS_FINE_LOCATION can be any unique int
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                            PERMISSION_REQUEST_ACCESS_FINE_LOCATION);
-                }
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSION_REQUEST_ACCESS_FINE_LOCATION);
+
+            } else {
+                // No explanation needed, we can request the permission.
+
+                Log.d(LOG_TAG, "Really try getting permission!");
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSION_REQUEST_ACCESS_FINE_LOCATION);
+
             }
-//            Log.d(LOG_TAG, "Permission denied");
+        } else {
+//            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+//            FetchNearbyStop(adapter, location.getLatitude(), location.getLongitude());
+            tv_permission.setVisibility(View.GONE);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
     }
 
@@ -169,37 +179,39 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
     @Override
     public void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+        Log.d(LOG_TAG, "Waiting for permission");
         switch (requestCode) {
             case PERMISSION_REQUEST_ACCESS_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    try {
-                        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-                    } catch (SecurityException e) {
-
-                    }
-                } else {
-                    LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+                    Log.d(LOG_TAG, "Permission grant");
+                    mGoogleApiClient.reconnect();
                 }
-                return;
+                else {
+                    Log.d(LOG_TAG, "Permission denied");
+                    listView.setVisibility(View.GONE);
+                    tv_permission.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
 
     @Override
     public void onStop() {
-        super.onStop();
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
         }
+        super.onStop();
     }
 
     public void FetchNearbyStop(final ArrayAdapter<NearbyStopInfo> adapter, double lat, double lon) {

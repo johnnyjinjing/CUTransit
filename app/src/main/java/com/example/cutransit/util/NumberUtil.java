@@ -17,7 +17,7 @@ public class NumberUtil {
             return new DecimalFormat("#").format(ft) + " ft";
         }
         else {
-            return new DecimalFormat("#.##").format(ft / FEET_PER_MILE) + " mi";
+            return new DecimalFormat("#0.00").format(ft / FEET_PER_MILE) + " mi";
         }
     }
 }

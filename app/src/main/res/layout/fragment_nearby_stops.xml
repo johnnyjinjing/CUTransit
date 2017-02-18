@@ -21,4 +21,13 @@
         android:textSize="24sp"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/permission_status"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Permission denied, not able to get current location!"
+        android:textSize="24sp"
+        android:visibility="gone" />
+
 </FrameLayout>
