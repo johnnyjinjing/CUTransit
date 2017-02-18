@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.example.cutransit.R;
 import com.example.cutransit.model.NearbyStopInfo;
-import com.example.cutransit.util.NumberUtil;
+import com.example.cutransit.util.NumberUtils;
 
 /**
  * Created by JingJin on 2/16/17.
@@ -38,7 +38,7 @@ public class NearbyStopArrayAdapter extends ArrayAdapter<NearbyStopInfo> {
         tv1.setText(info.stop_name);
 
         TextView tv2 = (TextView) convertView.findViewById(R.id.stop_distance);
-        tv2.setText(NumberUtil.feetToMileDisplay(info.distance));
+        tv2.setText(NumberUtils.feetToMileDisplay(info.distance));
         return convertView;
     }
 }

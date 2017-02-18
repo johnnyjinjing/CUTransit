@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.cutransit.R;
 import com.example.cutransit.model.DepartureInfo;
+import com.example.cutransit.util.ColorUtils;
 
 /**
  * Created by JingJin on 2/15/17.
@@ -34,7 +35,11 @@ public class DepartureArrayAdapter extends ArrayAdapter<DepartureInfo> {
         }
 
         LinearLayout ll = (LinearLayout) convertView.findViewById(R.id.departure_info);
-        ll.setBackgroundColor(Color.parseColor("#" + info.routeColor));
+        int backgroundcolor = Color.parseColor("#" + info.routeColor);
+        int textcolor = ColorUtils.getContrastColor(backgroundcolor);
+        ll.setBackgroundColor(backgroundcolor);
+        ((TextView) ll.findViewById(R.id.departure_info_route)).setTextColor(textcolor);
+        ((TextView) ll.findViewById(R.id.departure_info_time)).setTextColor(textcolor);
 
         TextView tv1 = (TextView) convertView.findViewById(R.id.departure_info_route);
         tv1.setText(info.headSign);

@@ -6,7 +6,7 @@ import java.text.DecimalFormat;
  * Created by JingJin on 2/16/17.
  */
 
-public class NumberUtil {
+public class NumberUtils {
 
     private static final double FEET_PER_MILE = 5280.0;
     private static final double FEET_UPPER_BOUND = FEET_PER_MILE / 10.0;
