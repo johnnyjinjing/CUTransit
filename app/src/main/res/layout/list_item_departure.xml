@@ -3,17 +3,24 @@
     android:id="@+id/departure_info"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:minHeight="@dimen/list_item_main_layout_min_height"
     android:orientation="horizontal"
     android:padding="@dimen/list_item_main_layout_padding">
 
-    <TextView
-        android:id="@+id/departure_info_route"
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="@dimen/list_item_main_layout_primary_text_size"
-        android:gravity="center_vertical|start" />
+        android:gravity="start">
+
+        <TextView
+            android:id="@+id/departure_info_route"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|start"
+            android:textSize="@dimen/list_item_main_layout_primary_text_size" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/departure_info_time"
@@ -22,4 +29,5 @@
         android:layout_gravity="end"
         android:gravity="center_vertical|end"
         android:textSize="@dimen/list_item_main_layout_secondary_text_size" />
+    
 </LinearLayout>

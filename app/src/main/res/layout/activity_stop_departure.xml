@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:divider="@null"
         android:dividerHeight="@dimen/activity_stop_divider_height"
-        android:orientation="vertical" />
+        android:orientation="vertical"/>
 
     <TextView
         android:id="@+id/empty_list_all_departures"
