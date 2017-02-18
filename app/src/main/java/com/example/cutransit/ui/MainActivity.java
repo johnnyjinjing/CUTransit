@@ -18,13 +18,16 @@ import android.view.MenuInflater;
 import com.example.cutransit.R;
 import com.example.cutransit.data.DBHelper;
 import com.example.cutransit.util.DataUtils;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AllStopsFragment.Callback,
-        FavoriteStopsFragment.Callback, NearbyStopsFragment.Callback{
+        FavoriteStopsFragment.Callback, NearbyStopsFragment.Callback {
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -56,7 +59,13 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
         if (!checkDataBase(this, DBHelper.DATABASE_NAME)) {
             DataUtils.fetchStopsData(this);
         }
+
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544~3347511713");
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,8 +126,7 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
             int favorite = Integer.parseInt(extra.substring(extra.length() - 1));
 
             launchDepartureActivity(intent.getData().toString(), name, favorite);
-        }
-        else{
+        } else {
             Log.d(LOG_TAG, "Intent action does not recognize.");
         }
     }

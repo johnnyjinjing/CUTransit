@@ -29,5 +29,5 @@
         android:layout_gravity="end"
         android:gravity="center_vertical|end"
         android:textSize="@dimen/list_item_main_layout_secondary_text_size" />
-    
+
 </LinearLayout>
