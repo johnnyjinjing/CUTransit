@@ -2,15 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
+    android:padding="@dimen/list_item_main_layout_padding"
+    android:minHeight="@dimen/list_item_main_layout_min_height"
     android:orientation="horizontal">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/stop_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp" />
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|start"
+        android:textSize="@dimen/list_item_main_layout_primary_text_size" />
 </LinearLayout>

@@ -3,12 +3,9 @@
     android:id="@+id/departure_info"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="60dp"
+    android:minHeight="@dimen/list_item_main_layout_min_height"
     android:orientation="horizontal"
-    android:paddingBottom="8dp"
-    android:paddingEnd="8dp"
-    android:paddingStart="8dp"
-    android:paddingTop="8dp">
+    android:padding="@dimen/list_item_main_layout_padding">
 
     <TextView
         android:id="@+id/stop_name"
@@ -16,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center_vertical|start"
-        android:textSize="20sp" />
+        android:textSize="@dimen/list_item_main_layout_primary_text_size" />
 
     <TextView
         android:id="@+id/stop_distance"
@@ -24,5 +21,5 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:gravity="center_vertical|end"
-        android:textSize="16sp" />
+        android:textSize="@dimen/list_item_main_layout_secondary_text_size" />
 </LinearLayout>

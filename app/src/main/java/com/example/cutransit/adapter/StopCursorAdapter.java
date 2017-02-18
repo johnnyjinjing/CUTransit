@@ -25,16 +25,16 @@ public class StopCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item_stop, parent, false);
 //        Log.d(LOG_TAG, "New view created");
-        return view;
+        return LayoutInflater.from(context).inflate(R.layout.list_item_stop, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+
         TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name);
+
         int idxStopName = cursor.getColumnIndex(DataContract.StopEntry.COLUMN_NAME);
         stopNameTextView.setText(cursor.getString(idxStopName));
-//        Log.d(LOG_TAG, "View binded");
     }
 }

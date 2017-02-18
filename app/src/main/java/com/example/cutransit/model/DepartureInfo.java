@@ -5,6 +5,7 @@ package com.example.cutransit.model;
  */
 
 public class DepartureInfo {
+
     public String headSign;
     public String routeColor;
     public String expectedMins;

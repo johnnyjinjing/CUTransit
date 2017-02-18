@@ -16,12 +16,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "cutransit.db";
     private static final int DATABASE_VERSION = 1;
 
-    public DBHelper(Context context) {
+    DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         final String SQL_CREATE_STOP_TABLE =
                 "CREATE TABLE " + StopEntry.TABLE_NAME + " (" +
                         StopEntry._ID               + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

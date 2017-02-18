@@ -28,16 +28,15 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
-    private ViewPager mPager;
-    FragmentAdapter mAdapter;
-
-
     static final String INTENT_EXTRA_STOP_ID = "id";
     static final String INTENT_EXTRA_STOP_NAME = "name";
     static final String INTENT_EXTRA_STOP_FAVORITE = "favorite";
 
+    FragmentAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -47,37 +46,29 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
         mAdapter.addFragment(new AllStopsFragment(), "All Stops");
         mAdapter.addFragment(new FavoriteStopsFragment(), "Favorites");
         mAdapter.addFragment(new NearbyStopsFragment(), "Nearby");
-        mPager = (ViewPager) findViewById(R.id.pager);
+
+        ViewPager mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(mPager);
 
         if (!checkDataBase(this, DBHelper.DATABASE_NAME)) {
             DataUtils.fetchStopsData(this);
         }
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(mPager);
-
-        // Get the intent, verify the action and get the query
-//        Intent intent = getIntent();
-//        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-//        }else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-//            Log.d(LOG_TAG, "Suggesting item selected");
-//            Log.d(LOG_TAG, intent.getData().toString());
-//        }
-//        else{
-//            Log.d(LOG_TAG, "Intent action does not recognize.");
-//        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//        searchView.setSubmitButtonEnabled(false);
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -90,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
                 return false;
             }
         });
+
         return true;
     }
 
@@ -99,26 +91,31 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
     }
 
     private void launchDepartureActivity(String id, String name, int favorite) {
+
         Intent intent = new Intent(this, StopDepartureActivity.class)
                 .putExtra(INTENT_EXTRA_STOP_ID, id)
                 .putExtra(INTENT_EXTRA_STOP_NAME, name)
                 .putExtra(INTENT_EXTRA_STOP_FAVORITE, favorite);
+
         startActivity(intent);
     }
 
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Log.d(LOG_TAG, "New intent received");
+//        Log.d(LOG_TAG, "New intent received");
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
         }
-        //this else if is called when you will press Search Icon  or Go (on soft keyboard)
+        //this else if is called when you will press Search Icon or Go (on soft keyboard)
+
         else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            Log.d(LOG_TAG, "Suggesting item selected");
-            Log.d(LOG_TAG, " " + intent.getData() + " " + intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
+//            Log.d(LOG_TAG, "Suggesting item selected");
+//            Log.d(LOG_TAG, " " + intent.getData() + " " + intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
+
             String extra = intent.getStringExtra(SearchManager.EXTRA_DATA_KEY);
             String name = extra.substring(0, extra.length() - 1);
             int favorite = Integer.parseInt(extra.substring(extra.length() - 1));
+
             launchDepartureActivity(intent.getData().toString(), name, favorite);
         }
         else{
@@ -130,8 +127,7 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-
-        public FragmentAdapter(FragmentManager fm) {
+        FragmentAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -160,5 +156,4 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
         File dbFile = context.getDatabasePath(db);
         return dbFile.exists();
     }
-
 }

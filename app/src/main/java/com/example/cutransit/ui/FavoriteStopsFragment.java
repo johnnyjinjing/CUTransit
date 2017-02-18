@@ -23,11 +23,13 @@ import com.example.cutransit.data.DataContract;
 
 public class FavoriteStopsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final int STOP_LOADER = 0;
+
     private static final String LOG_TAG = AllStopsFragment.class.getSimpleName();
 
     private StopCursorAdapter stopCursorAdapter;
+
     ListView listView;
-    private static final int STOP_LOADER = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,13 +47,13 @@ public class FavoriteStopsFragment extends Fragment implements LoaderManager.Loa
         listView = (ListView) rootView.findViewById(R.id.list_all_stops);
         listView.setAdapter(stopCursorAdapter);
         listView.setEmptyView(rootView.findViewById(R.id.empty_list_favorite_stops));
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 // Cursor adapter returns a cursor at position for getItem(), or null
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+
                 if (cursor != null) {
                     int colId = cursor.getColumnIndex(DataContract.StopEntry.COLUMN_ID);
                     int colName = cursor.getColumnIndex(DataContract.StopEntry.COLUMN_NAME);
@@ -74,7 +76,6 @@ public class FavoriteStopsFragment extends Fragment implements LoaderManager.Loa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = DataContract.StopEntry.CONTENT_URI;
-//        Log.d(LOG_TAG, "CursorLoader created, from " + uri);
         return new CursorLoader(getActivity(), uri, null,
                 DataContract.StopEntry.TABLE_NAME + "." + DataContract.StopEntry.COLUMN_FAVORITE + " = ? ",
                 new String[]{"1"},
@@ -84,16 +85,11 @@ public class FavoriteStopsFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         stopCursorAdapter.swapCursor(data);
-//        if (data == null) {
-//            Log.d(LOG_TAG, "Cursor is null");
-//        }
-//        Log.d(LOG_TAG, "Load finished");
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         stopCursorAdapter.swapCursor(null);
-//        Log.d(LOG_TAG, "Loader reset");
     }
 
     public interface Callback {

@@ -1,12 +1,20 @@
-<resources>
-    <string name="app_name">CUTransit</string>
+<resources xmlns:xliff="http://schemas.android.com/tools">
+    <string name="app_name" translatable="false">CUTransit</string>
 
-    <string name="min1">%s MIN</string>
-    <string name="min2">%s MINS</string>action_favorite
+    <string name="min0">DUE</string>
+    <string name="min1"><xliff:g>%s</xliff:g> MIN</string>
+    <string name="min2"><xliff:g>%s</xliff:g> MINS</string>
+
 
     <string name="action_favorite">(un)Mark as favorite</string>
     <string name="action_search">Search for a stop</string>
 
-
     <string name="search_hint">Enter stop name</string>
+
+    <string name="empty_all_departures">No arriving bus at this stop!</string>
+    <string name="empty_favorite_stops">No favorite stops available!</string>
+    <string name="empty_all_stops">No stops available!</string>
+    <string name="empty_nearby_stops">No nearby stops available!</string>
+
+    <string name="permission_denied">Permission denied, not able to get current location!</string>
 </resources>

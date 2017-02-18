@@ -10,15 +10,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:divider="@null"
-        android:dividerHeight="0dp"/>
+        android:dividerHeight="@dimen/activity_stop_divider_height"/>
 
     <TextView
         android:id="@+id/empty_list_all_stops"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="No stops available!"
-        android:textSize="24sp"
+        android:text="@string/empty_all_stops"
+        android:textSize="@dimen/info_message_size"
         android:visibility="gone" />
 
     <TextView
@@ -26,8 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="No favorite stops available!"
-        android:textSize="24sp"
+        android:text="@string/empty_favorite_stops"
+        android:textSize="@dimen/info_message_size"
         android:visibility="gone" />
 
 </FrameLayout>

@@ -48,15 +48,19 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
 
     private static final String LOG_TAG = NearbyStopsFragment.class.getSimpleName();
 
+    private static final int PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 100;
+    private static final int locationRequestInterval = 120;
+    private static final int locationRequestFastestInterval = 60;
+
     View rootView;
     ListView listView;
     TextView tv_permission;
 
     GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private static final int PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 100;
 
     NearbyStopArrayAdapter adapter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,8 +69,9 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
         // Create the LocationRequest object
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(120 * 1000)
-                .setFastestInterval(60 * 1000);
+                .setInterval(locationRequestInterval * 1000)
+                .setFastestInterval(locationRequestFastestInterval * 1000);
+
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -77,10 +82,12 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_nearby_stops, container, false);
 
+        rootView = inflater.inflate(R.layout.fragment_nearby_stops, container, false);
         listView = (ListView) rootView.findViewById(R.id.list_nearby_stops);
+
         adapter = new NearbyStopArrayAdapter(getActivity());
+
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -128,11 +135,11 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            Log.d(LOG_TAG, "Try getting permission");
+//            Log.d(LOG_TAG, "Try getting permission");
 
             // Should we show an explanation?
             if (shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Log.d(LOG_TAG, "Not really try getting permission!");
+//                Log.d(LOG_TAG, "Not really try getting permission!");
 
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -143,14 +150,11 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
             } else {
                 // No explanation needed, we can request the permission.
 
-                Log.d(LOG_TAG, "Really try getting permission!");
+//                Log.d(LOG_TAG, "Really try getting permission!");
                 requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         PERMISSION_REQUEST_ACCESS_FINE_LOCATION);
-
             }
         } else {
-//            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-//            FetchNearbyStop(adapter, location.getLatitude(), location.getLongitude());
             tv_permission.setVisibility(View.GONE);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
@@ -158,7 +162,6 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
 
     private void handleNewLocation(Location location) {
         FetchNearbyStop(adapter, location.getLatitude(), location.getLongitude());
-//        Log.d(LOG_TAG, location.toString());
     }
 
     @Override
@@ -185,14 +188,12 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         Log.d(LOG_TAG, "Waiting for permission");
         switch (requestCode) {
             case PERMISSION_REQUEST_ACCESS_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(LOG_TAG, "Permission grant");
                     mGoogleApiClient.reconnect();
                 }
@@ -273,4 +274,3 @@ public class NearbyStopsFragment extends Fragment implements GoogleApiClient.Con
     }
 
 }
-

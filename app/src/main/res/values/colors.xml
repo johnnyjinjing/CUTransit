@@ -7,7 +7,9 @@
     <color name="unselected">#8FFF</color>
     <color name="selected">@color/colorAccent</color>
 
+    <color name="tab_text">@color/white</color>
 
     <color name="dimgrey">#696969</color>
+    <color name="white">#FFFFFF</color>
 
 </resources>

@@ -10,15 +10,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:divider="@null"
-        android:dividerHeight="0dp"/>
+        android:dividerHeight="@dimen/activity_stop_divider_height"/>
 
     <TextView
         android:id="@+id/empty_list_nearby_stops"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="No nearby stops available!"
-        android:textSize="24sp"
+        android:text="@string/empty_nearby_stops"
+        android:textSize="@dimen/info_message_size"
         android:visibility="gone" />
 
     <TextView
@@ -26,8 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Permission denied, not able to get current location!"
-        android:textSize="24sp"
+        android:text="@string/permission_denied"
+        android:textSize="@dimen/info_message_size"
         android:visibility="gone" />
 
 </FrameLayout>

@@ -5,6 +5,7 @@ package com.example.cutransit.model;
  */
 
 public class NearbyStopInfo {
+
     public String stop_name;
     public double distance;
     public String id;

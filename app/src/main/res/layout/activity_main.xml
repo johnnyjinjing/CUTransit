@@ -13,10 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:elevation="0dp"
+        android:elevation="@dimen/activity_main_tab_elevation"
         app:tabIndicatorColor="@color/colorAccent"
-        app:tabTextColor="#ffffff"
-        app:tabSelectedTextColor="#ffffff"
+        app:tabTextColor="@color/tab_text"
+        app:tabSelectedTextColor="@color/tab_text"
         app:tabMode="fixed" />
 
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"

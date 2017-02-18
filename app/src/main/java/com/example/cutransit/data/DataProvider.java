@@ -15,12 +15,15 @@ import android.support.annotation.Nullable;
  */
 
 public class DataProvider extends ContentProvider {
-    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-    static final String authority = DataContract.CONTENT_AUTHORITY;
-    private DBHelper mDBHelper;
 
     public static final int CODE_STOPS = 100;
     public static final int CODE_SUGGESTION = 101;
+
+    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+    static final String authority = DataContract.CONTENT_AUTHORITY;
+
+    private DBHelper mDBHelper;
 
     static {
         sUriMatcher.addURI(authority, DataContract.PATH_STOPS, CODE_STOPS);
@@ -35,8 +38,10 @@ public class DataProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+
         Cursor cursor;
+
         switch (sUriMatcher.match(uri)) {
             case CODE_STOPS: {
                 cursor = mDBHelper.getReadableDatabase().query(
@@ -71,6 +76,7 @@ public class DataProvider extends ContentProvider {
         }
 
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
         return cursor;
     }
 
@@ -83,18 +89,22 @@ public class DataProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+
         final SQLiteDatabase db = mDBHelper.getWritableDatabase();
+
         Uri retUri;
         long rowId;
 
         switch (sUriMatcher.match(uri)) {
             case CODE_STOPS:
                 rowId = db.insert(DataContract.StopEntry.TABLE_NAME, null, values);
+
                 if (rowId > 0)
                     retUri = DataContract.StopEntry.buildUri(rowId);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -104,12 +114,15 @@ public class DataProvider extends ContentProvider {
 
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+
         final SQLiteDatabase db = mDBHelper.getWritableDatabase();
+
         int rowsInserted = 0;
 
         switch (sUriMatcher.match(uri)) {
             case CODE_STOPS:
                 db.beginTransaction();
+
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(DataContract.StopEntry.TABLE_NAME, null, value);
@@ -121,25 +134,30 @@ public class DataProvider extends ContentProvider {
                 } finally {
                     db.endTransaction();
                 }
+
                 if (rowsInserted > 0) {
                     getContext().getContentResolver().notifyChange(uri, null);
                 }
+
                 break;
             default:
                 return super.bulkInsert(uri, values);
         }
+
         getContext().getContentResolver().notifyChange(uri, null);
+
         return rowsInserted;
 
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         throw new RuntimeException("We are not implementing DELETE in CUTransit.");
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+
         final SQLiteDatabase db = mDBHelper.getWritableDatabase();
         int rowId;
 
@@ -151,9 +169,11 @@ public class DataProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+
         if (rowId != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
+
         return rowId;
     }
 }

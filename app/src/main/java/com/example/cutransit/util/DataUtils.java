@@ -29,26 +29,26 @@ import cz.msebera.android.httpclient.Header;
 public class DataUtils {
     private static final String LOG_TAG = DataUtils.class.getSimpleName();
 
-    public static final String BASE_URL = "https://developer.cumtd.com/api";
-    public static final String VERSION = "v2.2";
-    public static final String FORMAT = "json";
+    private static final String BASE_URL = "https://developer.cumtd.com/api";
+    private static final String VERSION = "v2.2";
+    private static final String FORMAT = "json";
     public static final String QUEST_URL = BASE_URL + "/" + VERSION + "/" + FORMAT;
 
-    public static final String PATH_GET_STOPS = "GetStops";
+    private static final String PATH_GET_STOPS = "GetStops";
     public static final String PATH_GET_STOP_DEPARTURE = "GetDeparturesByStop";
     public static final String PATH_GET_NEARBY_STOPS = "GetStopsByLatLon";
 
     public static final String CUMTD_API_KEY_PARAM = "key";
-    public static final String CUMTD_API_KEY_STOP = "stops";
+    private static final String CUMTD_API_KEY_STOP = "stops";
     public static final String CUMTD_API_KEY_STOP_ID = "stop_id";
-    public static final String CUMTD_API_KEY_STOP_NAME = "stop_name";
-    public static final String CUMTD_API_KEY_STOP_CODE = "code";
-    public static final String CUMTD_API_KEY_STOP_DISTANCE = "distance";
-    public static final String CUMTD_API_KEY_DEPARTURE = "departures";
-    public static final String CUMTD_API_KEY_DEPARTURE_HEADSIGN = "headsign";
-    public static final String CUMTD_API_KEY_DEPARTURE_ROUTE = "route";
-    public static final String CUMTD_API_KEY_DEPARTURE_ROUTE_COLOR = "route_color";
-    public static final String CUMTD_API_KEY_DEPARTURE_EXPECT_MINS = "expected_mins";
+    private static final String CUMTD_API_KEY_STOP_NAME = "stop_name";
+    private static final String CUMTD_API_KEY_STOP_CODE = "code";
+    private static final String CUMTD_API_KEY_STOP_DISTANCE = "distance";
+    private static final String CUMTD_API_KEY_DEPARTURE = "departures";
+    private static final String CUMTD_API_KEY_DEPARTURE_HEADSIGN = "headsign";
+    private static final String CUMTD_API_KEY_DEPARTURE_ROUTE = "route";
+    private static final String CUMTD_API_KEY_DEPARTURE_ROUTE_COLOR = "route_color";
+    private static final String CUMTD_API_KEY_DEPARTURE_EXPECT_MINS = "expected_mins";
     public static final String CUMTD_API_KEY_LAT = "lat";
     public static final String CUMTD_API_KEY_LON = "lon";
 

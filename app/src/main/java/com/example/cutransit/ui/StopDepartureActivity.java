@@ -33,11 +33,14 @@ import cz.msebera.android.httpclient.Header;
 
 
 public class StopDepartureActivity extends AppCompatActivity {
+
     private static final String LOG_TAG = StopDepartureActivity.class.getSimpleName();
 
     View rootView;
     ListView listView;
+
     final Handler handler = new Handler();
+
     private Runnable runnable;
     private Timer timer;
 
@@ -53,6 +56,7 @@ public class StopDepartureActivity extends AppCompatActivity {
         String stopName;
 
         rootView = findViewById(R.id.activity_stop_departure);
+
         Intent intent = getIntent();
         stopName = intent.getStringExtra(MainActivity.INTENT_EXTRA_STOP_NAME);
         stopId = intent.getStringExtra(MainActivity.INTENT_EXTRA_STOP_ID);
@@ -61,6 +65,7 @@ public class StopDepartureActivity extends AppCompatActivity {
         setTitle(stopName);
 
         final DepartureArrayAdapter adapter = new DepartureArrayAdapter(this);
+
         listView = (ListView) rootView.findViewById(R.id.list_all_departures);
         listView.setAdapter(adapter);
 //        listView.setEmptyView(rootView.findViewById(R.id.empty_list_all_departures));
@@ -87,9 +92,11 @@ public class StopDepartureActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.favorite, menu);
+
         MenuItem item = menu.findItem(R.id.action_favorite);
         item.setChecked(stopFavorite == 1);
         item.setIcon(item.isChecked() ? R.drawable.heart_selected : R.drawable.heart_unselected);
+
         return true;
     }
 
@@ -97,7 +104,7 @@ public class StopDepartureActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_favorite) {
             item.setChecked(!item.isChecked());
-            Log.d(LOG_TAG, "" + item.isChecked());
+//            Log.d(LOG_TAG, "" + item.isChecked());
             item.setIcon(item.isChecked() ? R.drawable.heart_selected : R.drawable.heart_unselected);
 
             ContentValues cv = new ContentValues();
@@ -110,6 +117,7 @@ public class StopDepartureActivity extends AppCompatActivity {
 
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -136,7 +144,7 @@ public class StopDepartureActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Log.d(LOG_TAG, "URL is: " + url);
+//        Log.d(LOG_TAG, "URL is: " + url);
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url.toString(), new AsyncHttpResponseHandler() {
@@ -149,8 +157,8 @@ public class StopDepartureActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                 // called when response HTTP status is "200 OK"
-                Log.d(LOG_TAG, "Get departure data success");
-                Log.d(LOG_TAG, new String(response));
+//                Log.d(LOG_TAG, "Get departure data success");
+//                Log.d(LOG_TAG, new String(response));
                 DataUtils.parseStopDepartureDataFromJson(infos, new String(response));
                 adapter.clear();
                 for (DepartureInfo info : infos) {
