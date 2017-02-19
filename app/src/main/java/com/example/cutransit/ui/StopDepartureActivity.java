@@ -1,5 +1,7 @@
 package com.example.cutransit.ui;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,6 +22,7 @@ import com.example.cutransit.adapter.DepartureArrayAdapter;
 import com.example.cutransit.data.DataContract;
 import com.example.cutransit.model.DepartureInfo;
 import com.example.cutransit.util.DataUtils;
+import com.example.cutransit.widget.FavoriteStopsWidgetProvider;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -115,6 +118,13 @@ public class StopDepartureActivity extends AppCompatActivity {
                     DataContract.StopEntry.TABLE_NAME + "." +
                             DataContract.StopEntry.COLUMN_ID + " = ? ",
                     new String[]{stopId});
+
+            int widgetIDs[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), FavoriteStopsWidgetProvider.class));
+
+            // force widget update
+            for (int widgetId : widgetIDs) {
+                AppWidgetManager.getInstance(getApplication()).notifyAppWidgetViewDataChanged(widgetId, R.id.widget_list_view);
+            }
 
             return true;
         }

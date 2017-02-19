@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.example.cutransit.R;
 import com.example.cutransit.ui.StopDepartureActivity;
@@ -87,9 +86,9 @@ public class FavoriteStopsWidgetProvider extends AppWidgetProvider {
             String stopId = intent.getStringExtra(INTENT_EXTRA_STOP_ID);
             int favorite = intent.getIntExtra(INTENT_EXTRA_STOP_FAVORITE, 1);
 
-            Toast.makeText(context, stopName + " " +
-                    stopId + " " +
-                    favorite, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, stopName + " " +
+//                    stopId + " " +
+//                    favorite, Toast.LENGTH_SHORT).show();
 
             Intent newIntent = new Intent(context, StopDepartureActivity.class)
                     .putExtra(INTENT_EXTRA_STOP_ID, stopId)
