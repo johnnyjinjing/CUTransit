@@ -37,6 +37,22 @@
             android:name=".data.DataProvider"
             android:authorities="com.example.cutransit.provider" />
 
+        <!-- Widget -->
+        <receiver
+            android:name=".widget.FavoriteStopsWidgetProvider"
+            android:label="@string/title_widget_favorite_stops">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_favorite" />
+        </receiver>
+
+        <service
+            android:name=".widget.FavoriteStopsWidgetRemoteService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
     </application>
 
 

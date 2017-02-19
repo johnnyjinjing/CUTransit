@@ -31,9 +31,9 @@ public class MainActivity extends AppCompatActivity implements AllStopsFragment.
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
-    static final String INTENT_EXTRA_STOP_ID = "id";
-    static final String INTENT_EXTRA_STOP_NAME = "name";
-    static final String INTENT_EXTRA_STOP_FAVORITE = "favorite";
+    public static final String INTENT_EXTRA_STOP_ID = "id";
+    public static final String INTENT_EXTRA_STOP_NAME = "name";
+    public static final String INTENT_EXTRA_STOP_FAVORITE = "favorite";
 
     FragmentAdapter mAdapter;
 

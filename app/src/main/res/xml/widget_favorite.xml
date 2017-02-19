@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/widget_favorite"
+    android:minHeight="@dimen/widget_favorite_height"
+    android:minWidth="@dimen/widget_favorite_width"
+    android:updatePeriodMillis="0" />

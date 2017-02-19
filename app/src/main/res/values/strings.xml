@@ -18,5 +18,7 @@
 
     <string name="permission_denied">Permission denied, not able to get current location!</string>
 
+    <string name="title_widget_favorite_stops">FavoriteStops</string>
+
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

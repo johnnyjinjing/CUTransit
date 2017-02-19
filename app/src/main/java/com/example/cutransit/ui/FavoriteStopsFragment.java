@@ -93,7 +93,7 @@ public class FavoriteStopsFragment extends Fragment implements LoaderManager.Loa
     }
 
     public interface Callback {
-        public void onItemSelected(String id, String name, int favorite);
+        void onItemSelected(String id, String name, int favorite);
     }
 }
 

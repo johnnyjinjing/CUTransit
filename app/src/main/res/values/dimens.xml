@@ -14,5 +14,8 @@
     <dimen name="list_item_main_layout_primary_text_size">20sp</dimen>
     <dimen name="list_item_main_layout_secondary_text_size">16sp</dimen>
 
+    <dimen name="widget_favorite_height">110dp</dimen>
+    <dimen name="widget_favorite_width">110dp</dimen>
+
 
 </resources>
